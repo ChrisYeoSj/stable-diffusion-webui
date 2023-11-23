@@ -316,12 +316,7 @@ class StableDiffusionProcessing:
             if torch.is_tensor(image_mask):
                 conditioning_mask = image_mask
             else:
-                conditioning_mask = np.array(image_mask.convert("L"))
-                conditioning_mask = conditioning_mask.astype(np.float32) / 255.0
-                conditioning_mask = torch.from_numpy(conditioning_mask[None, None])
-
-                # Inpainting model uses a discretized mask as input, so we round to either 1.0 or 0.0
-                conditioning_mask = torch.round(conditioning_mask)
+                conditioning_mask = source_image.new_ones(1, 1, *source_image.shape[-2:])
         else:
             conditioning_mask = source_image.new_ones(1, 1, *source_image.shape[-2:])
 
